@@ -1,0 +1,98 @@
+**setup react-router-dom
+package needed: npm install react-router-dom -S
+
+create router.js/.jsx(for vite react) file and paste below:
+import { createBrowserRouter } from "react-router-dom"
+import Component from "./views/Component"
+import App from "./App"
+
+const router = createBrowserRouter([
+  {
+    path: "/component/:id",
+    element: <Component key="component1" />, //key is needed if parehas og component ang link
+  },
+  {
+    path: "/",
+    element: <App />,
+  },
+
+  {
+    path: "/",
+    element: <ExampleWithOutlet/>,
+    children: [{}]
+  }
+])
+export default router
+
+paste the code snippet below inside index/main.js:
+<RouterProvider router={router} /> //router from router.js
+////////////////////////////////////////////////////////////////////////////////////
+**set up useContext API
+
+//create ContextProvider
+
+const StateContext = createContext({
+	token: null,
+	setToken: () => {}
+})
+
+export const useStateContext = () => useContext(StateContext); 
+
+export const ContextProvider = ({children}) => {
+	const [token, _setToken] = useState(localStorage.getItem("ACCESS_TOKEN"));
+	
+	const setToken = (token) => {
+		_setToken(token);
+		if(token) {
+			localStorage.setItem("ACCESS_TOKEN", token);
+		}else {
+			localStorage.removeItem("ACCESS_TOKEN");
+		}
+	} 
+	return (
+		<StateContext.Provider values={{token, setToken}} > {children} </StateContext.Provider>
+	)
+}
+
+//main/index.jsx, wrap or add the ff. below:
+	<ContextProvider>
+            <RouterProvider router={router} />
+        </ContextProvider>
+
+//file.jsx, how to import and utilize
+	const { token } = useStateContext();
+////////////////////////////////////////////////////////////////////////////////////
+**set up axios instance
+
+create file AxiosClient.js:
+const AxiosClient = axios.create({
+	baseURL: `http://localhost:8000/api`,
+})
+
+AxiosClient.interceptors.request.use((config) => {
+	const token = localStorage.getItem("ACCESS_TOKEN");
+	config.headers.Authorization = `Bearer ${token}`;
+	return config
+})
+
+AxiosClient.interceptors.response.use(
+	(response) => response,
+	(error) => {
+		try{
+			const {response} =error;
+			if(response.status === 401) localStorage.removeItem("ACCESS_TOKEN")
+		} catch(e) {
+			console.error(e)
+		}
+		throw error
+	}
+
+export default AxiosClient
+**utilizing the AxiosClient
+for example for login api
+
+AxiosClient.post("/login", payload).then(({data}) => setData(data)).catch((error) => console.error(error))
+////////////////////////////////////////////////////////
+
+forms for login/register useRef/onchange
+get/post/put/delete method utilization

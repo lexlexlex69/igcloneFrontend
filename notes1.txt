@@ -1,0 +1,45 @@
+container: for predefined responsive layout
+
+pointer-events-none: to ignore parent element/ bypass element to access element beneath
+fixed z-0 : best combo for background image
+
+space-x-#: spacing for x axis using margin for the children elements
+items-center: align item center
+size-#: width&heigth
+mx-auto: to center items
+sticky: position sticky
+inset-x-0: left&right to 0
+w-full: width to 100%
+z-#: z index position
+
+bg-gradient-to-r: linear gradient bg color
+from-pink-500 via-indigo-600 to-pink-500: combo for the bg-gradient
+bg-clip-text: clip background depending on its object
+rounded-full: border radius
+border: border px 1
+
+text-center: align text center
+leading-[1.15]: adjust line height
+text-4xl: adjust both font size and line height
+font-extrabold: adjust font thicknes
+text-transparent: transparent text
+
+max-w-screen-xl: max width will follow ur max screen width
+lg:px-20: adjusts the x width depending on the screen size
+sm:text-6xl: adjust both font size and line height depending on the screen size
+
+code below for customize classname:
+@layer components {
+  .sidebar-icon {
+    @apply relative flex items-center justify-center h-12 w-12 mt-2 mb-2 mx-auto shadow-lg bg-gray-800
+    hover:bg-green-600 hover:text-white rounded-3xl hover:rounded-xl transition-all duration-300 ease-linear cursor-pointer;
+  }
+
+  .sidebar-tooltip {
+    @apply absolute w-auto p-2 m-2 min-w-max left-14 rounded-md shadow-md text-white bg-gray-900 text-xs font-bold
+    transition-all duration-100 origin-left scale-0;
+  }
+}
+
+links that might be helpful:
+styling direct children -- https://tailwindcss.com/docs/hover-focus-and-other-states#
